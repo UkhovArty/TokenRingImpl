@@ -11,5 +11,6 @@ public class Package {
     private final String message;
     private final Integer from;
     private final Integer where;
+    private final Long timeSent = System.currentTimeMillis(); //in order to measure latency, I decide to track sending time of the package
 
 }

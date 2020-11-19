@@ -1,36 +1,15 @@
 package tokenRing;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+public interface Node extends Runnable {
+    void passPack(Package pack);
+    void obtainPack(Package pack);
+    Package getData();
+    Integer getNum();
+    Node getNextNode();
+    Long getLatencyMarker();
 
-@RequiredArgsConstructor
-@Getter
-@Setter
-public class Node implements Runnable {
-    private final int num;
-    private volatile Package data;
-    private Node nextNode;
-
-    public void run() {
-        while (true) {
-            if (this.data != null) {
-                passPack(this.data);
-                this.data = null;
-            }
-        }
-    }
+    void setData(Package pack);
+    void setNextNode(Node nextNode);
 
 
-    public void passPack(Package pack) {
-        System.out.println("Package: " + pack.getMessage() + " sent from node: " + this.num);
-        this.nextNode.obtainPack(pack);
-    }
-
-    public void obtainPack(Package pack) {
-        System.out.println("Package: " + pack.getMessage() + " received on node: " + this.num);
-        while (this.data != null) {
-        }
-        this.data = pack;
-    }
 }
