@@ -5,11 +5,12 @@ public class Ring {
     private final String THROUGHPUT_TEST = "throughputTest";
     private final String INITIAL = "initial";
     private Long averageLatencyMarker = 0L;
+    private Integer averageThroughput = 0;
 
     public Ring(int numOfNodes, String nodeType) {
         if (nodeType.equals(INITIAL)) {
             this.nodes = new InitialNode[numOfNodes];
-        } else if(nodeType.equals(THROUGHPUT_TEST)) {
+        } else if (nodeType.equals(THROUGHPUT_TEST)) {
             this.nodes = new ThroughputNode[numOfNodes];
         } else {
             this.nodes = new InitialNode[numOfNodes];
@@ -27,6 +28,14 @@ public class Ring {
         }
         averageLatencyMarker = averageLatencyMarker / nodes.length;
         return averageLatencyMarker;
+    }
+
+    public Integer getAverageThroughput() {
+        for (Node node : nodes) {
+            averageThroughput += node.getAmountOfMsgs();
+        }
+        averageThroughput = averageThroughput / nodes.length;
+        return averageThroughput;
     }
 
     private void createRing(int numOfNodes, String nodeType) {

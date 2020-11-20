@@ -12,12 +12,20 @@ public class ThroughputNode implements Runnable, Node {
     private volatile Package data;
     private Node nextNode;
     private Long latencyMarker;
+    private Integer amountOfMsgs = 0;
+    private Long firstRecievedMsg;
 
     @Override
     public void run() {
         while (true) {
             if (this.data != null) {
+                if (amountOfMsgs.equals(0)) {
+                    firstRecievedMsg = this.data.getTimeSent();
+                }
                 passPack(this.data);
+                if (System.currentTimeMillis() - firstRecievedMsg <= 1000) {
+                    this.amountOfMsgs += 1;
+                }
                 this.data = null;
             }
         }

@@ -12,6 +12,7 @@ public class InitialNode implements Runnable, Node {
     private volatile Package data;
     private Node nextNode;
     private Long latencyMarker = 0L;
+    private Integer amountOfMsgs = 0;
 
     public void run() {
         while (true) {

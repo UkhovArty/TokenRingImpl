@@ -7,7 +7,7 @@ public interface Node extends Runnable {
     Integer getNum();
     Node getNextNode();
     Long getLatencyMarker();
-
+    Integer getAmountOfMsgs();
     void setData(Package pack);
     void setNextNode(Node nextNode);
 
