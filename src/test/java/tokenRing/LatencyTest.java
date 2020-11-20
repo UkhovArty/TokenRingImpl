@@ -59,9 +59,7 @@ class LatencyTest {
         );
     }
     // Next test is made to investigate dependency of latency from amount of nodes in system, throwing only one message.
-    // 2 nodes: 842 3 nodes: 596 4 nodes: 507 5 nodes: 331
     // 2 nodes: 1256 3 nodes: 859 4 nodes: 653 5 nodes: 605 6 nodes: 578 7 nodes: 500 8 nodes: 395 9 nodes: 318
-    // curious results, may be there are some mistake here
     @Test
     void changeAmountOfNodesWithConstantAmountOfMessages() throws InterruptedException {
         Ring ring9 = new Ring(9, "initial");

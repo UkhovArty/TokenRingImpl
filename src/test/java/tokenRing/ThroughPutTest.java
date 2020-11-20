@@ -15,10 +15,9 @@ class ThroughPutTest {
     // the result is 44 messages per second (not really cool) (avg for 5 nodes with 5 nonconsumig messages in system)
     // 42 second try
     // 47 third try
-    //44.33 msq per second (my laptop is a potato :) )
+    //avg by 10 tries is 44.33 msq per second (my laptop is a potato :) )
     @Test
-    void ThroughputTest() throws InterruptedException {
-        int counter = 0;
+    void ThroughputFullyLoadedSystemTest() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
             Thread.sleep(100);
             throughputRing.sendMessage(new Package("from 4 to 2", 3, 4));
@@ -26,5 +25,47 @@ class ThroughPutTest {
         Thread.sleep(30000);
         System.out.println(throughputRing.getAverageThroughput());
     }
-
+    //Now I will modernize previous test in order to cover cases with under loaded system.
+    // 34
+    // 34
+    // 24
+    // avg: 30.6
+    @Test
+    void ThroughputUnderLoadedSystemTest() throws InterruptedException {
+            throughputRing.sendMessage(new Package("from 4 to 2", 3, 4));
+        Thread.sleep(30000);
+        System.out.println(throughputRing.getAverageThroughput());
+    }
+    //Normal loaded System
+    //38
+    //38
+    //46
+    //avg: 40.6
+    @Test
+    void ThroughputNormalLoadedSystemTest() throws InterruptedException {
+        for (int i = 0; i < 3; i++) {
+            Thread.sleep(100);
+            throughputRing.sendMessage(new Package("from 4 to 2", 3, 4));
+        }
+        Thread.sleep(10000);
+        System.out.println(throughputRing.getAverageThroughput());
+    }
+    //Thus fully loaded system shows slightly better throughput,
+    // I will measure throughput on num of nodes dependency for the fully loaded systems:
+    //I will do it in manual mode
+    //5: 9
+    //6: 5
+    //7: 4
+    //4: 12
+    //3: 23
+    @Test
+    void ThroughputForDifferentNodeAmountsTest() throws InterruptedException {
+        Ring ring = new Ring(7, "throughputTest");
+        for (int i = 0; i < 1; i++) {
+            Thread.sleep(100);
+            ring.sendMessage(new Package("from 4 to 2", 2, 1));
+        }
+        Thread.sleep(10000);
+        System.out.println(ring.getAverageThroughput());
+    }
 }
