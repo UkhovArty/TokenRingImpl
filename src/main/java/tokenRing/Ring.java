@@ -30,6 +30,10 @@ public class Ring {
         return averageLatencyMarker;
     }
 
+    public Long getNodeLatencyMarker(Integer numNode) {
+        return nodes[numNode].getLatencyMarker();
+    }
+
     public Integer getAverageThroughput() {
         for (Node node : nodes) {
             averageThroughput += node.getAmountOfMsgs();

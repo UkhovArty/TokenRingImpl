@@ -16,41 +16,48 @@ class LatencyTest {
         someRing.sendMessage(new Package("from 2 to 3", 2, 3));
         someRing.sendMessage(new Package("from 3 to 4", 3, 4));
         someRing.sendMessage(new Package("from 4 to 5", 4, 0));
-        Thread.sleep(1000);
+        Thread.sleep(10000);
         //With messages sent from every node system struggles to deliver them to the destination points. the process will never end
     }
 
     // 5 nodes system latency were measured for different amount of messages sent from different nodes almost at one time:
-    // the results are: 4: 451 3: 267 2: 233 1: 214, thus we can see that latency is low when system is not too loaded
     @Test
     void LoadTestForDifferentAmountOfMessages() throws InterruptedException {
         HashMap<Integer, Long> latenciesForNodes = new HashMap<>();
+        Long markers = 0L;
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2));
             someRing.sendMessage(new Package("from 2 to 3", 2, 3));
             someRing.sendMessage(new Package("from 3 to 4", 3, 4));
+            Thread.sleep(1000);
+            markers += someRing.getAverageLatencyMarker();
         }
-        Thread.sleep(1000);
-        latenciesForNodes.put(4, someRing.getAverageLatencyMarker());
+        latenciesForNodes.put(4, markers / 20);
+        markers = 0L;
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2));
             someRing.sendMessage(new Package("from 4 to 2", 2, 3));
+            Thread.sleep(1000);
+            markers += someRing.getAverageLatencyMarker();
         }
-        Thread.sleep(1000);
-        latenciesForNodes.put(3, someRing.getAverageLatencyMarker());
+        latenciesForNodes.put(3, markers / 20);
+        markers = 0L;
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2));
+            Thread.sleep(1000);
+            markers += someRing.getAverageLatencyMarker();
         }
-        Thread.sleep(1000);
-        latenciesForNodes.put(2, someRing.getAverageLatencyMarker());
+        latenciesForNodes.put(2, markers / 20);
+        markers = 0L;
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1));
+            Thread.sleep(1000);
+            markers += someRing.getAverageLatencyMarker();
         }
-        Thread.sleep(1000);
-        latenciesForNodes.put(1, someRing.getAverageLatencyMarker());
+        latenciesForNodes.put(1, markers / 20);
         System.out.println(
                 "4: " + latenciesForNodes.get(4)
                         + " 3: " + latenciesForNodes.get(3)
@@ -58,6 +65,7 @@ class LatencyTest {
                         + " 1: " + latenciesForNodes.get(1)
         );
     }
+
     // Next test is made to investigate dependency of latency from amount of nodes in system, throwing only one message.
     // 2 nodes: 1256 3 nodes: 859 4 nodes: 653 5 nodes: 605 6 nodes: 578 7 nodes: 500 8 nodes: 395 9 nodes: 318
     @Test
@@ -81,14 +89,14 @@ class LatencyTest {
 
         Thread.sleep(10000);
         System.out.println(
-                "2 nodes: " + ring2.getAverageLatencyMarker()
-                        + " 3 nodes: " + ring3.getAverageLatencyMarker()
-                        + " 4 nodes: " + ring4.getAverageLatencyMarker()
-                        + " 5 nodes: " + ring5.getAverageLatencyMarker()
-                        + " 6 nodes: " + ring6.getAverageLatencyMarker()
-                        + " 7 nodes: " + ring7.getAverageLatencyMarker()
-                        + " 8 nodes: " + ring8.getAverageLatencyMarker()
-                        + " 9 nodes: " + ring9.getAverageLatencyMarker()
+                "2 nodes: " + ring2.getNodeLatencyMarker(1)
+                        + " 3 nodes: " + ring3.getNodeLatencyMarker(2)
+                        + " 4 nodes: " + ring4.getNodeLatencyMarker(3)
+                        + " 5 nodes: " + ring5.getNodeLatencyMarker(4)
+                        + " 6 nodes: " + ring6.getNodeLatencyMarker(5)
+                        + " 7 nodes: " + ring7.getNodeLatencyMarker(6)
+                        + " 8 nodes: " + ring8.getNodeLatencyMarker(7)
+                        + " 9 nodes: " + ring9.getNodeLatencyMarker(8)
         );
     }
 }

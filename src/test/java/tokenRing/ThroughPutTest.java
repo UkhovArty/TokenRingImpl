@@ -2,8 +2,6 @@ package tokenRing;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ThroughPutTest {
     private Ring throughputRing = new Ring(5, "throughputTest");
 
@@ -13,8 +11,6 @@ class ThroughPutTest {
     // and try to figure out how many messages will pass through one node in a 10000 period
     //------------------------(avg for 5 nodes with 5 nonconsumig messages in system)-------------------------------
     // the result is 44 messages per second (not really cool) (avg for 5 nodes with 5 nonconsumig messages in system)
-    // 42 second try
-    // 47 third try
     //avg by 10 tries is 44.33 msq per second (my laptop is a potato :) )
     @Test
     void ThroughputFullyLoadedSystemTest() throws InterruptedException {
@@ -25,22 +21,16 @@ class ThroughPutTest {
         Thread.sleep(30000);
         System.out.println(throughputRing.getAverageThroughput());
     }
+
     //Now I will modernize previous test in order to cover cases with under loaded system.
-    // 34
-    // 34
-    // 24
-    // avg: 30.6
     @Test
     void ThroughputUnderLoadedSystemTest() throws InterruptedException {
-            throughputRing.sendMessage(new Package("from 4 to 2", 3, 4));
+        throughputRing.sendMessage(new Package("from 4 to 2", 3, 4));
         Thread.sleep(30000);
         System.out.println(throughputRing.getAverageThroughput());
     }
+
     //Normal loaded System
-    //38
-    //38
-    //46
-    //avg: 40.6
     @Test
     void ThroughputNormalLoadedSystemTest() throws InterruptedException {
         for (int i = 0; i < 3; i++) {
@@ -50,14 +40,10 @@ class ThroughPutTest {
         Thread.sleep(10000);
         System.out.println(throughputRing.getAverageThroughput());
     }
+
     //Thus fully loaded system shows slightly better throughput,
     // I will measure throughput on num of nodes dependency for the fully loaded systems:
     //I will do it in manual mode
-    //5: 9
-    //6: 5
-    //7: 4
-    //4: 12
-    //3: 23
     @Test
     void ThroughputForDifferentNodeAmountsTest() throws InterruptedException {
         Ring ring = new Ring(7, "throughputTest");
