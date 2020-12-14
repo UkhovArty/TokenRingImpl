@@ -16,7 +16,7 @@ class ThroughPutTest {
     void ThroughputFullyLoadedSystemTest() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
             Thread.sleep(100);
-            throughputRing.sendMessage(new Package("from 4 to 2", 3, 4));
+            throughputRing.sendMessage(new Package("from 4 to 2", 3, 4, System.currentTimeMillis()));
         }
         Thread.sleep(30000);
         System.out.println(throughputRing.getAverageThroughput());
@@ -25,7 +25,7 @@ class ThroughPutTest {
     //Now I will modernize previous test in order to cover cases with under loaded system.
     @Test
     void ThroughputUnderLoadedSystemTest() throws InterruptedException {
-        throughputRing.sendMessage(new Package("from 4 to 2", 3, 4));
+        throughputRing.sendMessage(new Package("from 4 to 2", 3, 4, System.currentTimeMillis()));
         Thread.sleep(30000);
         System.out.println(throughputRing.getAverageThroughput());
     }
@@ -35,7 +35,7 @@ class ThroughPutTest {
     void ThroughputNormalLoadedSystemTest() throws InterruptedException {
         for (int i = 0; i < 3; i++) {
             Thread.sleep(100);
-            throughputRing.sendMessage(new Package("from 4 to 2", 3, 4));
+            throughputRing.sendMessage(new Package("from 4 to 2", 3, 4, System.currentTimeMillis()));
         }
         Thread.sleep(10000);
         System.out.println(throughputRing.getAverageThroughput());
@@ -49,7 +49,7 @@ class ThroughPutTest {
         Ring ring = new Ring(7, "throughputTest");
         for (int i = 0; i < 1; i++) {
             Thread.sleep(100);
-            ring.sendMessage(new Package("from 4 to 2", 2, 1));
+            ring.sendMessage(new Package("from 4 to 2", 2, 1, System.currentTimeMillis()));
         }
         Thread.sleep(10000);
         System.out.println(ring.getAverageThroughput());
