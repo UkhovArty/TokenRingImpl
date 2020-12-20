@@ -1,10 +1,17 @@
-package tokenRing;
+package tokenRing.VolatileVariableRealization;
+
+
+import tokenRing.BufferedRealization.NodeImpl;
+import tokenRing.Package;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Ring {
     private final Node[] nodes;
     private final String THROUGHPUT_TEST = "throughputTest";
     private final String INITIAL = "initial";
-    private Long averageLatencyMarker = 0L;
     private Integer averageThroughput = 0;
 
     public Ring(int numOfNodes, String nodeType) {
@@ -22,12 +29,18 @@ public class Ring {
         this.nodes[pack.getFrom()].setData(pack);
     }
 
-    public Long getAverageLatencyMarker() {
-        for (Node node : nodes) {
-            averageLatencyMarker += node.getLatencyMarker();
-        }
-        averageLatencyMarker = averageLatencyMarker / nodes.length;
-        return averageLatencyMarker;
+//    public Long getAverageLatencyMarker() {
+//        for (Node node : nodes) {
+//            averageLatencyMarker += node.getLatencyMarker();
+//        }
+//        averageLatencyMarker = averageLatencyMarker / nodes.length;
+//        return averageLatencyMarker;
+//    }
+
+    public ArrayList<Long> getLatencies() {
+        ArrayList<Long> latencies = new ArrayList<>(this.nodes.length);
+        latencies.addAll(Stream.of(this.nodes).map(Node::getLatencyMarker).collect(Collectors.toList()));
+        return latencies;
     }
 
     public Long getNodeLatencyMarker(Integer numNode) {

@@ -1,6 +1,7 @@
-package tokenRing;
+package tokenRing.VolatileVariableRealization;
 
 import org.junit.jupiter.api.Test;
+import tokenRing.Package;
 
 class ThroughPutTest {
     private Ring throughputRing = new Ring(5, "throughputTest");

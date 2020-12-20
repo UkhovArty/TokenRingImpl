@@ -1,8 +1,9 @@
-package tokenRing;
+package tokenRing.VolatileVariableRealization;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import tokenRing.Package;
 
 @RequiredArgsConstructor
 @Getter

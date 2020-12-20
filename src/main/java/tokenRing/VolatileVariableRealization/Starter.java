@@ -1,4 +1,4 @@
-package tokenRing;
+package tokenRing.VolatileVariableRealization;
 
 public class Starter {
     public static void main(String[] args) {

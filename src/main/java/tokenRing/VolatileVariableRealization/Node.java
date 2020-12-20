@@ -1,4 +1,6 @@
-package tokenRing;
+package tokenRing.VolatileVariableRealization;
+
+import tokenRing.Package;
 
 public interface Node extends Runnable {
     void passPack(Package pack);

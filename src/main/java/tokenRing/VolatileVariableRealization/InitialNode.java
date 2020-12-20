@@ -1,8 +1,9 @@
-package tokenRing;
+package tokenRing.VolatileVariableRealization;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import tokenRing.Package;
 
 @RequiredArgsConstructor
 @Getter
@@ -15,13 +16,13 @@ public class InitialNode implements Runnable, Node {
     private Integer amountOfMsgs = 0;
 
     public void run() {
-        while (true) {
-            if (this.data != null) {
+            while (true) {
+                if (this.data != null) {
                 if (!this.num.equals(this.data.getWhere())) {
                     passPack(this.data);
                 } else {
                     this.latencyMarker = System.currentTimeMillis() - data.getTimeSent();
-                    System.out.println(this.data.getMessage() + "set on node: " + this.num);
+                    System.out.println("latency is " + this.latencyMarker);
                 }
                 this.data = null;
             }
@@ -30,13 +31,11 @@ public class InitialNode implements Runnable, Node {
 
     @Override
     public void passPack(Package pack) {
-        System.out.println("Package: " + pack.getMessage() + " sent from node: " + this.num);
         this.nextNode.obtainPack(pack);
     }
 
     @Override
     public void obtainPack(Package pack) {
-        System.out.println("Package: " + pack.getMessage() + " received on node: " + this.num);
         while (this.data != null) {
         }
         this.data = pack;

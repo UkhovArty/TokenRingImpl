@@ -1,9 +1,16 @@
-package tokenRing;
+package tokenRing.VolatileVariableRealization;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import tokenRing.Package;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 class LatencyTest {
     private static Ring someRing = new Ring(5, "initial");
@@ -34,47 +41,42 @@ class LatencyTest {
     // 5 nodes system latency were measured for different amount of messages sent from different nodes almost at one time:
     @Test
     void LoadTestForDifferentAmountOfMessages() throws InterruptedException {
-        HashMap<Integer, Long> latenciesForNodes = new HashMap<>();
-        Long markers = 0L;
+        List<Long> markers = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 2 to 3", 2, 3, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 3 to 4", 3, 4, System.currentTimeMillis()));
             Thread.sleep(1000);
-            markers += someRing.getAverageLatencyMarker();
+            markers.addAll(someRing.getLatencies());
         }
-        latenciesForNodes.put(4, markers / 20);
-        markers = 0L;
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 4 to 2", 2, 3, System.currentTimeMillis()));
             Thread.sleep(1000);
-            markers += someRing.getAverageLatencyMarker();
+            markers.addAll(someRing.getLatencies());
         }
-        latenciesForNodes.put(3, markers / 20);
-        markers = 0L;
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2, System.currentTimeMillis()));
             Thread.sleep(1000);
-            markers += someRing.getAverageLatencyMarker();
+            markers.addAll(someRing.getLatencies());
         }
-        latenciesForNodes.put(2, markers / 20);
-        markers = 0L;
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1, System.currentTimeMillis()));
             Thread.sleep(1000);
-            markers += someRing.getAverageLatencyMarker();
+            markers.addAll(someRing.getLatencies());
         }
-        latenciesForNodes.put(1, markers / 20);
-        System.out.println(
-                "4: " + latenciesForNodes.get(4)
-                        + " 3: " + latenciesForNodes.get(3)
-                        + " 2: " + latenciesForNodes.get(2)
-                        + " 1: " + latenciesForNodes.get(1)
-        );
+        File csvFile = new File("InitialLatencyFile");
+        try (PrintWriter csvWriter = new PrintWriter(new FileWriter(csvFile))){
+            for(Long item : markers){
+                csvWriter.println(item);
+            }
+        } catch (IOException e) {
+            //Handle exception
+            e.printStackTrace();
+        }
     }
 
     // Next test is made to investigate dependency of latency from amount of nodes in system, throwing only one message.
