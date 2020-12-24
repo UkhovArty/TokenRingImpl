@@ -24,15 +24,15 @@ public class NodeImpl implements Node, Runnable {
     @Override
     public void pull() {
         try {
-            data = pullingMedium.get();
+            this.data = pullingMedium.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (data.getWhere().equals(num)) {
-            this.latencyMarker = System.currentTimeMillis() - data.getTimeSent();
-            System.out.println("Latency fot node" + this.num
-                    + " for message " + this.data.getMessage() + " is " + this.latencyMarker);
-            data = null;
+        if (this.data.getWhere().equals(this.num)) {
+            this.latencyMarker = System.nanoTime() - this.data.getTimeSent();
+        }
+        if (this.data.getFrom().equals(this.num)) {
+            this.data.setTimeSent(System.nanoTime());
         }
     }
 

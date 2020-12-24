@@ -11,9 +11,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static java.util.Arrays.asList;
 
 class LatencyTest {
-    private static Ring someRing = new Ring(5, "initial");
+    private static Ring someRing = new Ring(9, "initial");
 
     //This is the warm up
     @BeforeAll
@@ -42,36 +45,54 @@ class LatencyTest {
     @Test
     void LoadTestForDifferentAmountOfMessages() throws InterruptedException {
         List<Long> markers = new ArrayList<>();
+        Map<String, List<Long>> latencies = new HashMap<>();
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 2 to 3", 2, 3, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 3 to 4", 3, 4, System.currentTimeMillis()));
             Thread.sleep(1000);
-            markers.addAll(someRing.getLatencies());
+            markers.addAll(asList(someRing.getNodeLatencyMarker(1),
+                    someRing.getNodeLatencyMarker(2),
+                    someRing.getNodeLatencyMarker(3),
+                    someRing.getNodeLatencyMarker(4)));
         }
+        latencies.put("4 msgs", markers);
+        markers = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2, System.currentTimeMillis()));
-            someRing.sendMessage(new Package("from 4 to 2", 2, 3, System.currentTimeMillis()));
+            someRing.sendMessage(new Package("from 2 to 3", 2, 3, System.currentTimeMillis()));
             Thread.sleep(1000);
-            markers.addAll(someRing.getLatencies());
+            markers.addAll(asList(someRing.getNodeLatencyMarker(1),
+                    someRing.getNodeLatencyMarker(2),
+                    someRing.getNodeLatencyMarker(3)));
         }
+        latencies.put("3 msgs", markers);
+        markers = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1, System.currentTimeMillis()));
             someRing.sendMessage(new Package("from 1 to 2", 1, 2, System.currentTimeMillis()));
             Thread.sleep(1000);
-            markers.addAll(someRing.getLatencies());
+            markers.addAll(asList(someRing.getNodeLatencyMarker(1),
+                    someRing.getNodeLatencyMarker(2)));
         }
+        latencies.put("2 msgs", markers);
+        markers = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             someRing.sendMessage(new Package("from 0 to 1", 0, 1, System.currentTimeMillis()));
             Thread.sleep(1000);
-            markers.addAll(someRing.getLatencies());
+            markers.addAll(asList(someRing.getNodeLatencyMarker(1)));
         }
+        latencies.put("1 msg", markers);
         File csvFile = new File("InitialLatencyFile");
-        try (PrintWriter csvWriter = new PrintWriter(new FileWriter(csvFile))){
-            for(Long item : markers){
-                csvWriter.println(item);
+        try (PrintWriter csvWriter = new PrintWriter(new FileWriter(csvFile))) {
+            for (String s : latencies.keySet()) {
+                csvWriter.println(s + "\n");
+                for (Long item : latencies.get(s)) {
+                    csvWriter.print(item + " ");
+                }
+                csvWriter.println();
             }
         } catch (IOException e) {
             //Handle exception

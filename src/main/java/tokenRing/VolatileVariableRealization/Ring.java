@@ -1,7 +1,6 @@
 package tokenRing.VolatileVariableRealization;
 
 
-import tokenRing.BufferedRealization.NodeImpl;
 import tokenRing.Package;
 
 import java.util.ArrayList;

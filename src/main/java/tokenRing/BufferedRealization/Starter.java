@@ -11,6 +11,6 @@ public class Starter {
         new Thread(node1).start();
         new Thread(node2).start();
         System.out.println("here");
-        medium1.accept(new Package("msg", 0, 1, System.currentTimeMillis()));
+        medium1.accept(new Package("msg", 0, 1, System.nanoTime()));
     }
 }

@@ -1,16 +1,16 @@
 package tokenRing;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Package {
     private final String message;
     private final Integer from;
     private final Integer where;
-    private final Long timeSent; //in order to measure latency, I decide to track sending time of the package
+    private Long timeSent; //in order to measure latency, I decide to track sending time of the package
 
 }
