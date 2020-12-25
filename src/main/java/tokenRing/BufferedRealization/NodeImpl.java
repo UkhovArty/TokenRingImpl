@@ -14,6 +14,9 @@ public class NodeImpl implements Node, Runnable {
     private final Medium pushingMedium;
     private final Medium pullingMedium;
     private Long latencyMarker = 0L;
+    private Integer amountOfMsgs = 0;
+    private boolean isFirstMsgRecieved = false;
+    private Long time;
 
     @Override
     public void push(Package pack) {
@@ -28,12 +31,20 @@ public class NodeImpl implements Node, Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (this.data.getWhere().equals(this.num)) {
-            this.latencyMarker = System.nanoTime() - this.data.getTimeSent();
+        if (!this.isFirstMsgRecieved) {
+            this.time = System.currentTimeMillis();
+            isFirstMsgRecieved = true;
+        } else {
+            if (System.currentTimeMillis() - time <= 500) {
+                amountOfMsgs += 1;
+            }
         }
-        if (this.data.getFrom().equals(this.num)) {
-            this.data.setTimeSent(System.nanoTime());
-        }
+//        if (this.data.getWhere().equals(this.num)) {
+//            this.latencyMarker = System.nanoTime() - this.data.getTimeSent();
+//        }
+//        if (this.data.getFrom().equals(this.num)) {
+//            this.data.setTimeSent(System.nanoTime());
+//        }
     }
 
     @Override

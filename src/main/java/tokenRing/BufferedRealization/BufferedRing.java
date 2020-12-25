@@ -3,6 +3,7 @@ package tokenRing.BufferedRealization;
 import tokenRing.Package;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,6 +39,17 @@ public class BufferedRing {
         ArrayList<Long> latencies = new ArrayList<>(this.nodes.length);
         latencies.addAll(Stream.of(this.nodes).map(NodeImpl::getLatencyMarker).collect(Collectors.toList()));
         return latencies;
+    }
+
+    public List<Integer> getNodesThroughputs() {
+        return Stream.of(this.nodes).map(n -> n.getAmountOfMsgs()*2).collect(Collectors.toList());
+    }
+
+    public void resetThroughputs() {
+        for (NodeImpl node : this.nodes) {
+            node.setFirstMsgRecieved(false);
+            node.setAmountOfMsgs(0);
+        }
     }
 
     public Long getNodeLatencyMarker(int num) {

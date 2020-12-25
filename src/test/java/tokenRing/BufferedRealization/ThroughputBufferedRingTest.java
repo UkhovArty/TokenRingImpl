@@ -4,22 +4,18 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tokenRing.Package;
+import tokenRing.VolatileVariableRealization.Ring;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 
-class BufferedRingLatencyTest {
+class ThroughputBufferedRingTest {
 
     //This is the warm up
     @BeforeAll
@@ -34,26 +30,27 @@ class BufferedRingLatencyTest {
 
     @SneakyThrows
     @Test
-    void LatencyPerCapacityTest() {
-        ArrayList<Long> latencies = new ArrayList<>();
-        String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\LatenciesPerNodeAmountPerCapacity.txt";
+    void ThroughputPerCapacityTest() {
+        ArrayList<Integer> throughputs = new ArrayList<>();
+        String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\ThroughputsPerNodeAmountPerCapacity.txt";
         int numOfNodes = 6;
-        List<Integer> amountOfMsgs = asList(6, 21, 34);
         int capacity = 6;
+        List<Integer> amountOfMsgs = asList(6, 21, 34);
         for (Integer j : amountOfMsgs) {
             BufferedRing someRing1 = new BufferedRing(numOfNodes);
             for (int i = 0; i < j; i++) {
                 someRing1.sendMessage(new Package("from 0 to 3", 0, numOfNodes - 1, System.nanoTime()));
                 Thread.sleep(1);
             }
-            for (int i = 0; i < 100; i++) {
-                Thread.sleep(10);
-                latencies.add(someRing1.getNodeLatencyMarker(numOfNodes - 1));
+            for (int i = 0; i < 50; i++) {
+                someRing1.resetThroughputs();
+                Thread.sleep(500);
+                throughputs.addAll(someRing1.getNodesThroughputs());
             }
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(numOfNodes).append("nodes capacity ").append(capacity).append(" ").append(j).append(" msgs ");
-            for (Long latency : latencies) {
-                stringBuilder.append(latency.toString()).append(",");
+            stringBuilder.append(numOfNodes).append("n").append(capacity).append("c").append(j).append("m ");
+            for (Integer thput : throughputs) {
+                stringBuilder.append(thput.toString()).append(",");
             }
             stringBuilder.append("\n");
             try {
@@ -61,28 +58,29 @@ class BufferedRingLatencyTest {
             } catch (IOException e) {
                 System.out.println(e);
             }
-            latencies = new ArrayList<>();
+            throughputs = new ArrayList<>();
         }
     }
 
     @Test
     void LoadTestForDifferentAmountOfMessages() throws InterruptedException {
-        List<Long> latencies = new ArrayList<>();
-        String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\LatenciesPerMsgs.txt";
+        List<Integer> throughputs = new ArrayList<>();
+        String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\ThroughputPerMsgs.txt";
         for (int numOfMsgs = 1; numOfMsgs < 16; numOfMsgs++) {
             BufferedRing someRing = new BufferedRing(4);
             for (int i = 0; i < numOfMsgs; i++) {
                 someRing.sendMessage(new Package("from 0 to 1", 0, 3, System.nanoTime()));
                 Thread.sleep(15);
             }
-            for (int i = 0; i < 40; i++) {
-                Thread.sleep(20);
-                latencies.add(someRing.getNodeLatencyMarker(3));
+            for (int i = 0; i < 20; i++) {
+                    someRing.resetThroughputs();
+                    Thread.sleep(500);
+                    throughputs.addAll(someRing.getNodesThroughputs());
             }
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(numOfMsgs).append("m,");
-            for (Long latency : latencies) {
-                stringBuilder.append(latency.toString()).append(",");
+            for (Integer thput : throughputs) {
+                stringBuilder.append(thput.toString()).append(",");
             }
             stringBuilder.append("\n");
             try {
@@ -90,7 +88,7 @@ class BufferedRingLatencyTest {
             } catch (IOException e) {
                 System.out.println(e);
             }
-            latencies = new ArrayList<>();
+            throughputs = new ArrayList<>();
         }
     }
 }
