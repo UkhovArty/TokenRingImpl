@@ -8,7 +8,7 @@ import java.util.concurrent.BlockingQueue;
 
 @NoArgsConstructor
 public class BlockingQueueMedium implements Medium {
-    private final BlockingQueue<Package> queue = new ArrayBlockingQueue<>(4);
+    private final BlockingQueue<Package> queue = new ArrayBlockingQueue<>(3);
 
     @Override
     public void accept(Package data) {

@@ -42,7 +42,7 @@ public class BufferedRing {
     }
 
     public List<Integer> getNodesThroughputs() {
-        return Stream.of(this.nodes).map(n -> n.getAmountOfMsgs()*2).collect(Collectors.toList());
+        return Stream.of(this.nodes).map(n -> n.getAmountOfMsgs()).collect(Collectors.toList());
     }
 
     public void resetThroughputs() {

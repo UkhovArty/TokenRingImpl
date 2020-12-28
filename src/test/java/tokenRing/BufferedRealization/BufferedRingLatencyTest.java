@@ -37,9 +37,9 @@ class BufferedRingLatencyTest {
     void LatencyPerCapacityTest() {
         ArrayList<Long> latencies = new ArrayList<>();
         String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\LatenciesPerNodeAmountPerCapacity.txt";
-        int numOfNodes = 6;
-        List<Integer> amountOfMsgs = asList(6, 21, 34);
-        int capacity = 6;
+        int numOfNodes = 3;
+        List<Integer> amountOfMsgs = asList(1, 3, 5);
+        int capacity = 1;
         for (Integer j : amountOfMsgs) {
             BufferedRing someRing1 = new BufferedRing(numOfNodes);
             for (int i = 0; i < j; i++) {
@@ -68,16 +68,16 @@ class BufferedRingLatencyTest {
     @Test
     void LoadTestForDifferentAmountOfMessages() throws InterruptedException {
         List<Long> latencies = new ArrayList<>();
-        String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\LatenciesPerMsgs.txt";
-        for (int numOfMsgs = 1; numOfMsgs < 16; numOfMsgs++) {
-            BufferedRing someRing = new BufferedRing(4);
-            for (int i = 0; i < numOfMsgs; i++) {
-                someRing.sendMessage(new Package("from 0 to 1", 0, 3, System.nanoTime()));
-                Thread.sleep(15);
-            }
+        BufferedRing someRing = new BufferedRing(3);
+        String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\LatenciesPerMsgs1.txt";
+        for (int numOfMsgs = 1; numOfMsgs < 13; numOfMsgs++) {
+//            for (int i = 0; i < numOfMsgs; i++) {
+            someRing.sendMessage(new Package("from 0 to 1", 0, 2, System.nanoTime()));
+//                Thread.sleep(15);
+//            }
             for (int i = 0; i < 40; i++) {
                 Thread.sleep(20);
-                latencies.add(someRing.getNodeLatencyMarker(3));
+                latencies.add(someRing.getNodeLatencyMarker(2));
             }
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(numOfMsgs).append("m,");

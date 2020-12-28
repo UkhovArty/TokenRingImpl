@@ -31,20 +31,20 @@ public class NodeImpl implements Node, Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (!this.isFirstMsgRecieved) {
-            this.time = System.currentTimeMillis();
-            isFirstMsgRecieved = true;
-        } else {
-            if (System.currentTimeMillis() - time <= 500) {
-                amountOfMsgs += 1;
-            }
+//        if (!this.isFirstMsgRecieved) {
+//            this.time = System.currentTimeMillis();
+//            isFirstMsgRecieved = true;
+//        } else {
+//            if (System.currentTimeMillis() - time <= 1000) {
+//                amountOfMsgs += 1;
+//            }
+//        }
+        if (this.data.getWhere().equals(this.num)) {
+            this.latencyMarker = System.nanoTime() - this.data.getTimeSent();
         }
-//        if (this.data.getWhere().equals(this.num)) {
-//            this.latencyMarker = System.nanoTime() - this.data.getTimeSent();
-//        }
-//        if (this.data.getFrom().equals(this.num)) {
-//            this.data.setTimeSent(System.nanoTime());
-//        }
+        if (this.data.getFrom().equals(this.num)) {
+            this.data.setTimeSent(System.nanoTime());
+        }
     }
 
     @Override

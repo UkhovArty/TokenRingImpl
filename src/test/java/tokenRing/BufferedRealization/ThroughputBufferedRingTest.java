@@ -33,9 +33,9 @@ class ThroughputBufferedRingTest {
     void ThroughputPerCapacityTest() {
         ArrayList<Integer> throughputs = new ArrayList<>();
         String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\ThroughputsPerNodeAmountPerCapacity.txt";
-        int numOfNodes = 6;
-        int capacity = 6;
-        List<Integer> amountOfMsgs = asList(6, 21, 34);
+        int numOfNodes = 3;
+        int capacity = 3;
+        List<Integer> amountOfMsgs = asList(2, 6, 10);
         for (Integer j : amountOfMsgs) {
             BufferedRing someRing1 = new BufferedRing(numOfNodes);
             for (int i = 0; i < j; i++) {
@@ -65,16 +65,16 @@ class ThroughputBufferedRingTest {
     @Test
     void LoadTestForDifferentAmountOfMessages() throws InterruptedException {
         List<Integer> throughputs = new ArrayList<>();
-        String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\ThroughputPerMsgs.txt";
-        for (int numOfMsgs = 1; numOfMsgs < 16; numOfMsgs++) {
-            BufferedRing someRing = new BufferedRing(4);
-            for (int i = 0; i < numOfMsgs; i++) {
-                someRing.sendMessage(new Package("from 0 to 1", 0, 3, System.nanoTime()));
+        BufferedRing someRing = new BufferedRing(3);
+        String filePath = "C:\\Users\\auhov\\IdeaProjects\\TokenRingImpl\\src\\test\\resources\\ThroughputPerMsgs1.txt";
+        for (int numOfMsgs = 1; numOfMsgs < 12; numOfMsgs++) {
+//            for (int i = 0; i < numOfMsgs; i++) {
+                someRing.sendMessage(new Package("from 0 to 1", 0, 2, System.nanoTime()));
                 Thread.sleep(15);
-            }
-            for (int i = 0; i < 20; i++) {
+//            }
+            for (int i = 0; i < 30; i++) {
                     someRing.resetThroughputs();
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     throughputs.addAll(someRing.getNodesThroughputs());
             }
             StringBuilder stringBuilder = new StringBuilder();
